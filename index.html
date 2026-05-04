@@ -1,0 +1,1309 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>cuestionario de autoexploración — ánimo, ansiedad, energía y atención</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --primary: #4a8a85;
+    --primary-dark: #2d5d5a;
+    --primary-light: #6db6b0;
+    --bg: #f4f9f8;
+    --bg-card: #ffffff;
+    --text: #2c3e50;
+    --text-soft: #5a6c7d;
+    --border: #d5e6e3;
+    --accent: #e8f3f1;
+    --warning: #c0653a;
+    --warning-bg: #fef3ec;
+    --danger: #b94c4c;
+    --danger-bg: #fceaea;
+    --success: #4a8a85;
+  }
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.6;
+    font-size: 16px;
+    min-height: 100vh;
+  }
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 20px 16px 60px;
+  }
+  header {
+    text-align: center;
+    padding: 24px 16px 16px;
+    border-bottom: 2px solid var(--border);
+    margin-bottom: 24px;
+  }
+  header h1 {
+    color: var(--primary-dark);
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  header .subtitle {
+    color: var(--text-soft);
+    font-size: 0.9rem;
+  }
+  header .date {
+    color: var(--text-soft);
+    font-size: 0.8rem;
+    margin-top: 8px;
+  }
+  .card {
+    background: var(--bg-card);
+    border-radius: 16px;
+    padding: 28px 24px;
+    box-shadow: 0 2px 12px rgba(45, 93, 90, 0.07);
+    border: 1px solid var(--border);
+  }
+  .progress-wrap {
+    margin-bottom: 18px;
+  }
+  .progress-bar {
+    background: var(--accent);
+    height: 8px;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 6px;
+  }
+  .progress-fill {
+    background: linear-gradient(90deg, var(--primary-light), var(--primary));
+    height: 100%;
+    width: 0;
+    transition: width 0.3s ease;
+  }
+  .progress-text {
+    font-size: 0.78rem;
+    color: var(--text-soft);
+    display: flex;
+    justify-content: space-between;
+  }
+  .section-tag {
+    display: inline-block;
+    background: var(--accent);
+    color: var(--primary-dark);
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+    letter-spacing: 0.3px;
+  }
+  .question-text {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 8px;
+    line-height: 1.5;
+  }
+  .question-help {
+    font-size: 0.85rem;
+    color: var(--text-soft);
+    margin-bottom: 20px;
+    font-style: italic;
+  }
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+  .option {
+    display: flex;
+    align-items: center;
+    padding: 14px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: white;
+    font-size: 0.98rem;
+  }
+  .option:hover {
+    border-color: var(--primary-light);
+    background: var(--accent);
+  }
+  .option.selected {
+    border-color: var(--primary);
+    background: var(--accent);
+    box-shadow: 0 0 0 2px rgba(74, 138, 133, 0.15);
+  }
+  .option input { display: none; }
+  .option-marker {
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--border);
+    border-radius: 50%;
+    margin-right: 12px;
+    flex-shrink: 0;
+    position: relative;
+  }
+  .option.selected .option-marker {
+    border-color: var(--primary);
+    background: var(--primary);
+  }
+  .option.selected .option-marker::after {
+    content: "";
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: white;
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  textarea {
+    width: 100%;
+    min-height: 120px;
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 14px;
+    font-size: 0.98rem;
+    font-family: inherit;
+    resize: vertical;
+    margin-bottom: 24px;
+    background: white;
+  }
+  textarea:focus { outline: none; border-color: var(--primary); }
+  .nav-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: space-between;
+  }
+  button {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+  }
+  .btn-primary {
+    background: var(--primary);
+    color: white;
+    flex: 1;
+  }
+  .btn-primary:hover { background: var(--primary-dark); }
+  .btn-primary:disabled { background: #b8cdca; cursor: not-allowed; }
+  .btn-secondary {
+    background: white;
+    color: var(--primary-dark);
+    border: 1.5px solid var(--border);
+  }
+  .btn-secondary:hover { border-color: var(--primary); background: var(--accent); }
+  .btn-ghost {
+    background: transparent;
+    color: var(--text-soft);
+    font-size: 0.85rem;
+    padding: 8px 12px;
+  }
+  .btn-ghost:hover { color: var(--primary-dark); }
+  .intro-screen, .results-screen {
+    text-align: left;
+  }
+  .intro-screen h2, .results-screen h2 {
+    color: var(--primary-dark);
+    font-size: 1.3rem;
+    margin-bottom: 12px;
+  }
+  .intro-screen p, .results-screen p {
+    margin-bottom: 12px;
+    color: var(--text);
+  }
+  .intro-screen ul {
+    margin: 8px 0 16px 20px;
+    color: var(--text);
+  }
+  .intro-screen li { margin-bottom: 6px; }
+  .info-box {
+    background: var(--accent);
+    border-left: 4px solid var(--primary);
+    padding: 14px 16px;
+    border-radius: 8px;
+    margin: 16px 0;
+    font-size: 0.92rem;
+  }
+  .warning-box {
+    background: var(--warning-bg);
+    border-left: 4px solid var(--warning);
+    padding: 14px 16px;
+    border-radius: 8px;
+    margin: 16px 0;
+    font-size: 0.92rem;
+  }
+  .danger-box {
+    background: var(--danger-bg);
+    border-left: 4px solid var(--danger);
+    padding: 16px;
+    border-radius: 8px;
+    margin: 16px 0;
+  }
+  .danger-box h3 {
+    color: var(--danger);
+    margin-bottom: 8px;
+    font-size: 1rem;
+  }
+  .danger-box p { font-size: 0.92rem; }
+  .danger-box ul { margin: 8px 0 0 20px; font-size: 0.92rem; }
+  .section-index {
+    background: var(--accent);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 16px;
+  }
+  .section-index summary {
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--primary-dark);
+    font-size: 0.92rem;
+  }
+  .section-index ul {
+    list-style: none;
+    margin-top: 12px;
+  }
+  .section-index li {
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.88rem;
+  }
+  .section-index li:last-child { border-bottom: none; }
+  .section-index button {
+    background: none;
+    border: none;
+    color: var(--primary-dark);
+    cursor: pointer;
+    padding: 0;
+    font-size: 0.88rem;
+    text-align: left;
+    width: 100%;
+  }
+  .section-index button:hover { text-decoration: underline; }
+  .section-index .done { color: var(--text-soft); }
+  .section-index .done::after { content: " ✓"; color: var(--success); }
+  .results-screen .score-block {
+    background: var(--accent);
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 14px;
+  }
+  .score-block h3 {
+    color: var(--primary-dark);
+    font-size: 1.05rem;
+    margin-bottom: 6px;
+  }
+  .score-block .score-value {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--primary-dark);
+  }
+  .score-block .score-band {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin: 6px 0;
+  }
+  .band-min { color: #5a8d6f; }
+  .band-mild { color: #c8a04a; }
+  .band-mod { color: #c87b3a; }
+  .band-sev { color: var(--danger); }
+  .band-pos { color: var(--danger); font-weight: 700; }
+  .band-neg { color: #5a8d6f; }
+  .score-block .score-detail {
+    font-size: 0.88rem;
+    color: var(--text-soft);
+    margin-top: 6px;
+  }
+  .meter {
+    height: 10px;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 8px 0;
+    border: 1px solid var(--border);
+  }
+  .meter-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #5a8d6f, #c8a04a, #c87b3a, var(--danger));
+  }
+  .hypothesis {
+    background: white;
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+  }
+  .hypothesis-title {
+    font-weight: 600;
+    color: var(--primary-dark);
+    margin-bottom: 4px;
+    font-size: 0.95rem;
+  }
+  .hypothesis-text { font-size: 0.9rem; color: var(--text); }
+  .results-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 24px;
+  }
+  .results-actions button { width: 100%; }
+  .footer-note {
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--text-soft);
+    margin-top: 30px;
+    padding: 16px;
+    line-height: 1.5;
+  }
+  @media (max-width: 480px) {
+    .container { padding: 12px 10px 40px; }
+    .card { padding: 22px 18px; }
+    header h1 { font-size: 1.25rem; }
+    .question-text { font-size: 1.02rem; }
+    .option { padding: 12px 14px; font-size: 0.92rem; }
+  }
+  @media print {
+    body { background: white; }
+    .no-print, button, .nav-buttons, .results-actions, .section-index { display: none !important; }
+    .card { box-shadow: none; border: 1px solid #ccc; padding: 16px; page-break-inside: avoid; }
+    .container { max-width: 100%; padding: 0; }
+    .score-block, .hypothesis { page-break-inside: avoid; }
+    header { border-bottom: 1px solid #999; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>cuestionario de autoexploración</h1>
+    <div class="subtitle">ánimo · ansiedad · energía · atención</div>
+    <div class="date" id="date-display"></div>
+  </header>
+  <div id="app"></div>
+  <div class="footer-note no-print">
+    instrumento de cribado basado en dsm-5, phq-9, gad-7, mdq y asrs-v1.1<br>
+    no reemplaza una evaluación clínica profesional
+  </div>
+</div>
+
+<script>
+// ============================================================
+// DEFINICIÓN DE PREGUNTAS
+// ============================================================
+const SECTIONS = {
+  contexto: { name: "contexto", icon: "🌱", order: 1 },
+  depresion: { name: "estado de ánimo", icon: "💧", order: 2 },
+  ansiedad: { name: "ansiedad", icon: "🌊", order: 3 },
+  mania: { name: "energía y elevación del ánimo", icon: "⚡", order: 4 },
+  tdah: { name: "atención y organización", icon: "🌀", order: 5 },
+  curso: { name: "curso temporal", icon: "🕰", order: 6 },
+  historia: { name: "antecedentes", icon: "🌿", order: 7 },
+  funcion: { name: "repercusión funcional", icon: "🌳", order: 8 },
+  abierta: { name: "anotaciones libres", icon: "✎", order: 9 }
+};
+
+// escalas estándar
+const LIKERT4 = [
+  { label: "nunca", value: 0 },
+  { label: "varios días", value: 1 },
+  { label: "más de la mitad de los días", value: 2 },
+  { label: "casi todos los días", value: 3 }
+];
+const LIKERT5 = [
+  { label: "nunca", value: 0 },
+  { label: "raramente", value: 1 },
+  { label: "a veces", value: 2 },
+  { label: "a menudo", value: 3 },
+  { label: "muy a menudo", value: 4 }
+];
+const SI_NO = [
+  { label: "sí", value: 1 },
+  { label: "no", value: 0 }
+];
+const INTENSIDAD = [
+  { label: "nada", value: 0 },
+  { label: "leve", value: 1 },
+  { label: "moderado", value: 2 },
+  { label: "severo", value: 3 }
+];
+
+const QUESTIONS = [
+  // ==================== CONTEXTO (5) ====================
+  { id: "c1", section: "contexto", scale: "info", text: "¿cuál es tu sexo asignado al nacer?",
+    options: [{label:"mujer",value:"f"},{label:"hombre",value:"m"},{label:"intersex / otro",value:"o"},{label:"prefiero no decir",value:"x"}] },
+  { id: "c2", section: "contexto", scale: "info", text: "¿cuál es tu edad?",
+    options: [{label:"menos de 18",value:1},{label:"18-25",value:2},{label:"26-35",value:3},{label:"36-50",value:4},{label:"más de 50",value:5}] },
+  { id: "c3", section: "contexto", scale: "info", text: "¿tienes ciclo menstrual actualmente?",
+    help: "esto sirve para evaluar empeoramiento premenstrual más adelante.",
+    options: [{label:"sí, regular",value:"reg"},{label:"sí, irregular",value:"irreg"},{label:"no (menopausia, anticonceptivos sin sangrado, otros)",value:"no"},{label:"no aplica",value:"na"}] },
+  { id: "c4", section: "contexto", scale: "info", text: "¿hace cuánto tiempo notas los síntomas que te trajeron a este cuestionario?",
+    options: [{label:"menos de 2 semanas",value:1},{label:"entre 2 y 4 semanas",value:2},{label:"entre 1 y 3 meses",value:3},{label:"entre 3 y 12 meses",value:4},{label:"más de un año",value:5}] },
+  { id: "c5", section: "contexto", scale: "info", text: "¿estás actualmente en tratamiento psicológico o psiquiátrico?",
+    options: [{label:"sí, con psicóloga/o",value:"psi"},{label:"sí, con psiquiatra",value:"psiq"},{label:"sí, con ambos",value:"both"},{label:"no, pero lo he tenido antes",value:"prev"},{label:"nunca",value:"never"}] },
+
+  // ==================== DEPRESIÓN — PHQ-9 + EXTRAS (18) ====================
+  { id: "d1", section: "depresion", scale: "phq9", text: "en las últimas 2 semanas, ¿con qué frecuencia has tenido poco interés o placer en hacer las cosas?",
+    options: LIKERT4 },
+  { id: "d2", section: "depresion", scale: "phq9", text: "en las últimas 2 semanas, ¿con qué frecuencia te has sentido decaída, deprimida o sin esperanza?",
+    options: LIKERT4 },
+  { id: "d3", section: "depresion", scale: "phq9", text: "en las últimas 2 semanas, ¿con qué frecuencia has tenido problemas para dormir o has dormido demasiado?",
+    options: LIKERT4 },
+  { id: "d4", section: "depresion", scale: "phq9", text: "en las últimas 2 semanas, ¿con qué frecuencia te has sentido cansada o con poca energía?",
+    options: LIKERT4 },
+  { id: "d5", section: "depresion", scale: "phq9", text: "en las últimas 2 semanas, ¿con qué frecuencia has tenido poco apetito o has comido en exceso?",
+    options: LIKERT4 },
+  { id: "d6", section: "depresion", scale: "phq9", text: "en las últimas 2 semanas, ¿con qué frecuencia te has sentido mal contigo misma, como un fracaso, o que has decepcionado a tu familia?",
+    options: LIKERT4 },
+  { id: "d7", section: "depresion", scale: "phq9", text: "en las últimas 2 semanas, ¿con qué frecuencia te ha costado concentrarte (leer, ver tv, conversar)?",
+    options: LIKERT4 },
+  { id: "d8", section: "depresion", scale: "phq9", text: "en las últimas 2 semanas, ¿con qué frecuencia te has movido o hablado tan despacio que otros lo notaron, o lo opuesto, has estado tan inquieta que andabas más de lo habitual?",
+    options: LIKERT4 },
+  { id: "d9", section: "depresion", scale: "phq9", flag: "suicide", text: "en las últimas 2 semanas, ¿con qué frecuencia has tenido pensamientos de que estarías mejor muerta o de hacerte daño de algún modo?",
+    help: "responder con honestidad esta pregunta es importante. no es un test, es información para tu seguridad.",
+    options: LIKERT4 },
+  // extras depresión
+  { id: "d10", section: "depresion", scale: "depr_extra", text: "¿lloras con frecuencia, a veces sin un motivo claro?",
+    options: LIKERT4 },
+  { id: "d11", section: "depresion", scale: "depr_extra", text: "¿sientes una pesadez física, como si caminaras con plomo o tu cuerpo pesara más de lo normal?",
+    options: LIKERT4 },
+  { id: "d12", section: "depresion", scale: "depr_extra", text: "¿sientes desesperanza sobre el futuro, como si nada fuera a mejorar?",
+    options: LIKERT4 },
+  { id: "d13", section: "depresion", scale: "depr_extra", text: "¿sientes un vacío interno difícil de describir, distinto a la tristeza?",
+    options: LIKERT4 },
+  { id: "d14", section: "depresion", scale: "depr_extra", text: "¿te has aislado de amistades o familia que antes disfrutabas?",
+    options: LIKERT4 },
+  { id: "d15", section: "depresion", scale: "depr_extra", text: "¿has perdido el interés en actividades que antes te apasionaban (música, hobbies, creatividad, etc.)?",
+    options: LIKERT4 },
+  { id: "d16", section: "depresion", scale: "depr_extra", text: "¿te cuesta sentir placer incluso en cosas pequeñas (comida rica, abrazos, paisajes, una buena ducha)?",
+    options: LIKERT4 },
+  { id: "d17", section: "depresion", scale: "depr_extra", text: "¿tienes pensamientos de culpa excesivos, repasando errores del pasado una y otra vez?",
+    options: LIKERT4 },
+  { id: "d18", section: "depresion", scale: "depr_extra", text: "¿te sientes peor en la mañana al despertar que en otros momentos del día?",
+    help: "este patrón se llama 'variación diurna' y es típico de depresión melancólica.",
+    options: LIKERT4 },
+
+  // ==================== ANSIEDAD — GAD-7 + EXTRAS (15) ====================
+  { id: "a1", section: "ansiedad", scale: "gad7", text: "en las últimas 2 semanas, ¿con qué frecuencia te has sentido nerviosa, ansiosa o muy alterada?",
+    options: LIKERT4 },
+  { id: "a2", section: "ansiedad", scale: "gad7", text: "en las últimas 2 semanas, ¿con qué frecuencia no has podido dejar de preocuparte o controlar la preocupación?",
+    options: LIKERT4 },
+  { id: "a3", section: "ansiedad", scale: "gad7", text: "en las últimas 2 semanas, ¿con qué frecuencia te has preocupado demasiado por distintas cosas?",
+    options: LIKERT4 },
+  { id: "a4", section: "ansiedad", scale: "gad7", text: "en las últimas 2 semanas, ¿con qué frecuencia has tenido dificultad para relajarte?",
+    options: LIKERT4 },
+  { id: "a5", section: "ansiedad", scale: "gad7", text: "en las últimas 2 semanas, ¿con qué frecuencia has estado tan inquieta que te ha costado quedarte sentada?",
+    options: LIKERT4 },
+  { id: "a6", section: "ansiedad", scale: "gad7", text: "en las últimas 2 semanas, ¿con qué frecuencia te has irritado o molestado con facilidad?",
+    options: LIKERT4 },
+  { id: "a7", section: "ansiedad", scale: "gad7", text: "en las últimas 2 semanas, ¿con qué frecuencia has sentido miedo de que algo terrible vaya a pasar?",
+    options: LIKERT4 },
+  // extras ansiedad
+  { id: "a8", section: "ansiedad", scale: "anx_extra", text: "¿sientes tensión muscular constante (hombros, mandíbula apretada, espalda rígida)?",
+    options: LIKERT4 },
+  { id: "a9", section: "ansiedad", scale: "anx_extra", text: "¿tienes dolores de cabeza tensionales con frecuencia?",
+    options: LIKERT4 },
+  { id: "a10", section: "ansiedad", scale: "anx_extra", text: "¿sientes palpitaciones o taquicardia sin esfuerzo físico?",
+    options: LIKERT4 },
+  { id: "a11", section: "ansiedad", scale: "panic", text: "¿has tenido crisis súbitas de miedo intenso con síntomas físicos (ahogo, sudor, mareo, sensación de irrealidad) que llegan en minutos?",
+    help: "esto evalúa crisis de pánico (criterios dsm-5).",
+    options: LIKERT4 },
+  { id: "a12", section: "ansiedad", scale: "anx_extra", text: "¿evitas lugares, personas o situaciones por miedo o malestar (transporte público, multitudes, hablar en público, etc.)?",
+    options: LIKERT4 },
+  { id: "a13", section: "ansiedad", scale: "anx_extra", text: "¿anticipas constantemente desastres o 'lo peor que podría pasar'?",
+    options: LIKERT4 },
+  { id: "a14", section: "ansiedad", scale: "anx_extra", text: "¿te cuesta dormir por preocupaciones que dan vueltas en tu cabeza (rumiación)?",
+    options: LIKERT4 },
+  { id: "a15", section: "ansiedad", scale: "anx_extra", text: "¿tienes problemas digestivos vinculados al estrés (náuseas, dolor de estómago, intestino irritable)?",
+    options: LIKERT4 },
+
+  // ==================== (HIPO)MANÍA — MDQ + EXTRAS (18) ====================
+  { id: "m1", section: "mania", scale: "mdq", text: "pensando en TODA tu vida: ¿alguna vez has tenido un período de varios días en que te sentías tan bien o tan acelerada que otras personas pensaron que no eras tu yo habitual, o estabas tan acelerada que te metiste en problemas?",
+    help: "el mdq pregunta sobre cualquier momento de tu vida, no solo el presente.",
+    options: SI_NO },
+  { id: "m2", section: "mania", scale: "mdq", text: "¿alguna vez has tenido un período en que estabas tan irritable que gritabas a personas, peleabas o discutías?",
+    options: SI_NO },
+  { id: "m3", section: "mania", scale: "mdq", text: "¿alguna vez has tenido un período en que tenías mucha más confianza en ti misma de lo habitual?",
+    options: SI_NO },
+  { id: "m4", section: "mania", scale: "mdq", text: "¿alguna vez has tenido un período en que dormías mucho menos de lo usual y descubriste que no necesitabas dormir tanto?",
+    options: SI_NO },
+  { id: "m5", section: "mania", scale: "mdq", text: "¿alguna vez has tenido un período en que hablabas mucho más, o más rápido de lo habitual?",
+    options: SI_NO },
+  { id: "m6", section: "mania", scale: "mdq", text: "¿alguna vez has tenido un período en que tus pensamientos corrían a través de tu cabeza tan rápido que no podías frenarlos?",
+    options: SI_NO },
+  { id: "m7", section: "mania", scale: "mdq", text: "¿alguna vez has tenido un período en que te distraías tan fácilmente que cualquier cosa pequeña interrumpía lo que hacías?",
+    options: SI_NO },
+  { id: "m8", section: "mania", scale: "mdq", text: "¿alguna vez has tenido un período en que tenías mucha más energía de lo usual?",
+    options: SI_NO },
+  { id: "m9", section: "mania", scale: "mdq", text: "¿alguna vez has tenido un período en que estabas mucho más activa o hacías muchas más cosas de lo habitual?",
+    options: SI_NO },
+  { id: "m10", section: "mania", scale: "mdq", text: "¿alguna vez has tenido un período en que estabas mucho más sociable o extrovertida (ej. llamando amistades en horas extrañas)?",
+    options: SI_NO },
+  { id: "m11", section: "mania", scale: "mdq", text: "¿alguna vez has tenido un período en que estabas mucho más interesada en el sexo de lo usual?",
+    options: SI_NO },
+  { id: "m12", section: "mania", scale: "mdq", text: "¿alguna vez has tenido un período en que hacías cosas inusuales para ti, o que otros pudieron considerar excesivas, tontas o riesgosas?",
+    options: SI_NO },
+  { id: "m13", section: "mania", scale: "mdq", text: "¿alguna vez gastar dinero te metió a ti o a tu familia en problemas?",
+    options: SI_NO },
+  { id: "m14", section: "mania", scale: "mdq_cluster", text: "si marcaste varios 'sí' en las preguntas anteriores: ¿varios de esos comportamientos sucedieron al mismo tiempo / en el mismo período?",
+    help: "esta pregunta evalúa si los síntomas formaron un episodio agrupado, no eventos sueltos a lo largo de la vida.",
+    options: SI_NO },
+  { id: "m15", section: "mania", scale: "mdq_impact", text: "¿qué tantos problemas te causaron esos comportamientos? (no poder trabajar, problemas familiares/legales, peleas, etc.)",
+    options: [{label:"ningún problema",value:0},{label:"problemas leves",value:1},{label:"problemas moderados",value:2},{label:"problemas serios",value:3}] },
+  // extras hipomanía
+  { id: "m16", section: "mania", scale: "mania_extra", text: "¿has tenido sensación de grandiosidad, invencibilidad o sentimientos especiales/místicos en algún período?",
+    options: SI_NO },
+  { id: "m17", section: "mania", scale: "mania_extra", text: "¿has iniciado muchos proyectos a la vez con entusiasmo, dejándolos luego incompletos cuando 'baja' la energía?",
+    options: LIKERT4 },
+  { id: "m18", section: "mania", scale: "mania_extra", text: "¿has tenido cambios bruscos de ánimo (ej. eufórica y luego llorando en pocas horas, sin causa proporcional)?",
+    options: LIKERT4 },
+
+  // ==================== TDAH — ASRS-v1.1 (18) ====================
+  // parte A
+  { id: "t1", section: "tdah", scale: "asrs_a", text: "¿con qué frecuencia tienes problemas para terminar los detalles finales de un proyecto, una vez que la parte estimulante ya está hecha?",
+    options: LIKERT5 },
+  { id: "t2", section: "tdah", scale: "asrs_a", text: "¿con qué frecuencia tienes dificultad para ordenar las cosas cuando debes hacer una tarea que requiere organización?",
+    options: LIKERT5 },
+  { id: "t3", section: "tdah", scale: "asrs_a", text: "¿con qué frecuencia tienes problemas para recordar citas u obligaciones?",
+    options: LIKERT5 },
+  { id: "t4", section: "tdah", scale: "asrs_a", text: "cuando tienes una tarea que requiere mucho pensamiento, ¿con qué frecuencia la evitas o la postergas para empezarla?",
+    options: LIKERT5 },
+  { id: "t5", section: "tdah", scale: "asrs_a", text: "¿con qué frecuencia mueves o retuerces manos o pies cuando tienes que estar sentada por mucho tiempo?",
+    options: LIKERT5 },
+  { id: "t6", section: "tdah", scale: "asrs_a", text: "¿con qué frecuencia te sientes excesivamente activa, como impulsada por un motor?",
+    options: LIKERT5 },
+  // parte B + extras
+  { id: "t7", section: "tdah", scale: "asrs_b", text: "¿con qué frecuencia cometes errores por descuido cuando trabajas en un proyecto aburrido o difícil?",
+    options: LIKERT5 },
+  { id: "t8", section: "tdah", scale: "asrs_b", text: "¿con qué frecuencia tienes dificultad para mantener la atención en tareas repetitivas?",
+    options: LIKERT5 },
+  { id: "t9", section: "tdah", scale: "asrs_b", text: "¿con qué frecuencia te cuesta escuchar cuando alguien te habla, aún sin distracciones obvias?",
+    options: LIKERT5 },
+  { id: "t10", section: "tdah", scale: "asrs_b", text: "¿con qué frecuencia pierdes o te cuesta encontrar cosas en casa o el trabajo (llaves, lentes, papeles, celular)?",
+    options: LIKERT5 },
+  { id: "t11", section: "tdah", scale: "asrs_b", text: "¿con qué frecuencia te distraes con la actividad o el ruido a tu alrededor?",
+    options: LIKERT5 },
+  { id: "t12", section: "tdah", scale: "asrs_b", text: "¿con qué frecuencia te levantas de tu asiento en reuniones o situaciones donde se espera que permanezcas sentada?",
+    options: LIKERT5 },
+  { id: "t13", section: "tdah", scale: "adhd_extra", text: "¿con qué frecuencia te sientes inquieta o agitada por dentro, aunque no se note por fuera?",
+    help: "muchas mujeres con tdah describen 'hiperactividad interna' más que motora.",
+    options: LIKERT5 },
+  { id: "t14", section: "tdah", scale: "adhd_extra", text: "¿con qué frecuencia tienes dificultad para relajarte y disfrutar tu tiempo libre tranquilamente?",
+    options: LIKERT5 },
+  { id: "t15", section: "tdah", scale: "asrs_b", text: "¿con qué frecuencia hablas demasiado en situaciones sociales?",
+    options: LIKERT5 },
+  { id: "t16", section: "tdah", scale: "asrs_b", text: "¿con qué frecuencia te encuentras terminando las frases de las personas o respondiendo antes de que terminen de preguntar?",
+    options: LIKERT5 },
+  { id: "t17", section: "tdah", scale: "asrs_b", text: "¿con qué frecuencia te cuesta esperar tu turno?",
+    options: LIKERT5 },
+  { id: "t18", section: "tdah", scale: "asrs_b", text: "¿con qué frecuencia interrumpes a otros cuando están ocupados o conversando?",
+    options: LIKERT5 },
+
+  // ==================== CURSO TEMPORAL (8) ====================
+  { id: "ct1", section: "curso", scale: "info", text: "¿a qué edad notaste por primera vez síntomas de ánimo bajo, ansiedad o problemas de atención?",
+    options: [{label:"antes de los 12",value:1},{label:"entre 12 y 17",value:2},{label:"entre 18 y 25",value:3},{label:"después de los 25",value:4},{label:"no sabría decir",value:5}] },
+  { id: "ct2", section: "curso", scale: "info", text: "¿cómo describirías tu patrón de síntomas?",
+    options: [{label:"constantes, casi siempre presentes",value:"const"},{label:"episódicos, vienen y se van",value:"epis"},{label:"mixto: una base constante con picos",value:"mixto"}] },
+  { id: "ct3", section: "curso", scale: "info", text: "¿notas variación estacional (peor en otoño-invierno o primavera-verano)?",
+    options: [{label:"sí, peor en otoño-invierno",value:"oi"},{label:"sí, peor en primavera-verano",value:"pv"},{label:"no, no noto patrón estacional",value:"no"},{label:"no estoy segura",value:"ns"}] },
+  { id: "ct4", section: "curso", scale: "pmdd", text: "si tienes ciclo menstrual: ¿notas un empeoramiento marcado de tu ánimo, ansiedad o irritabilidad en los días previos a tu menstruación?",
+    help: "esto evalúa síndrome premenstrual / trastorno disfórico premenstrual.",
+    options: [{label:"no aplica / no tengo ciclo",value:-1},{label:"no, no noto cambios marcados",value:0},{label:"sí, leves",value:1},{label:"sí, moderados",value:2},{label:"sí, severos (afectan mi vida)",value:3}] },
+  { id: "ct5", section: "curso", scale: "info", text: "¿hay desencadenantes claros para tus síntomas (estrés, pérdidas, cambios vitales, conflictos)?",
+    options: [{label:"sí, casi siempre hay un desencadenante",value:"siemp"},{label:"a veces sí, a veces no",value:"avec"},{label:"no, aparecen sin causa aparente",value:"no"}] },
+  { id: "ct6", section: "curso", scale: "info", text: "¿has tenido períodos largos (semanas o meses) de relativa estabilidad o 'normalidad' entre los síntomas?",
+    options: [{label:"sí, periodos largos sin síntomas",value:"si"},{label:"periodos cortos de mejoría",value:"corto"},{label:"no recuerdo periodos así",value:"no"}] },
+  { id: "ct7", section: "curso", scale: "info", text: "en general, ¿tus síntomas se mantienen estables o cambian mucho de un momento a otro?",
+    options: [{label:"estables en el tiempo",value:"est"},{label:"cambian a lo largo de los días",value:"dia"},{label:"cambian incluso dentro del mismo día",value:"hora"}] },
+  { id: "ct8", section: "curso", scale: "info", text: "¿en qué momento del día te sientes peor?",
+    options: [{label:"mañana",value:"am"},{label:"tarde",value:"pm"},{label:"noche",value:"noc"},{label:"varía o no hay patrón",value:"var"}] },
+
+  // ==================== ANTECEDENTES (7) ====================
+  { id: "h1", section: "historia", scale: "info", text: "¿algún familiar de primer grado (padres, hermanos/as) ha tenido depresión diagnosticada?",
+    options: [{label:"sí",value:1},{label:"no",value:0},{label:"no estoy segura",value:0}] },
+  { id: "h2", section: "historia", scale: "info", text: "¿algún familiar ha tenido trastorno bipolar o 'subidas de ánimo' llamativas?",
+    options: [{label:"sí",value:1},{label:"no",value:0},{label:"no estoy segura",value:0}] },
+  { id: "h3", section: "historia", scale: "info", text: "¿algún familiar ha sido diagnosticado con tdah, o se sospecha?",
+    options: [{label:"sí",value:1},{label:"no",value:0},{label:"no estoy segura",value:0}] },
+  { id: "h4", section: "historia", scale: "info", text: "¿hay antecedentes familiares de suicidio o intentos?",
+    options: [{label:"sí",value:1},{label:"no",value:0},{label:"prefiero no responder",value:0}] },
+  { id: "h5", section: "historia", scale: "info", text: "¿hay antecedentes familiares de trastornos de ansiedad?",
+    options: [{label:"sí",value:1},{label:"no",value:0},{label:"no estoy segura",value:0}] },
+  { id: "h6", section: "historia", scale: "info", text: "¿has tenido alguna vez tratamiento psicológico o psiquiátrico previo?",
+    options: [{label:"sí, psicoterapia",value:"psi"},{label:"sí, medicación psiquiátrica",value:"med"},{label:"sí, ambos",value:"both"},{label:"no",value:"no"}] },
+  { id: "h7", section: "historia", scale: "info", text: "¿consumes alcohol u otras sustancias para 'calmarte', dormir o 'encender' tu ánimo?",
+    options: [{label:"nunca / muy raramente",value:0},{label:"a veces",value:1},{label:"frecuentemente",value:2},{label:"casi todos los días",value:3}] },
+
+  // ==================== REPERCUSIÓN FUNCIONAL (5) ====================
+  { id: "f1", section: "funcion", scale: "func", text: "¿qué tanto estos síntomas afectan tu trabajo o estudios?",
+    options: INTENSIDAD },
+  { id: "f2", section: "funcion", scale: "func", text: "¿qué tanto afectan tus relaciones cercanas (pareja, familia, amistades)?",
+    options: INTENSIDAD },
+  { id: "f3", section: "funcion", scale: "func", text: "¿qué tanto afectan tu autocuidado (higiene, alimentación, ejercicio, sueño regular)?",
+    options: INTENSIDAD },
+  { id: "f4", section: "funcion", scale: "func", text: "¿qué tanto malestar personal te generan estos síntomas?",
+    options: INTENSIDAD },
+  { id: "f5", section: "funcion", scale: "func", text: "¿has dejado de hacer cosas importantes para ti por estos síntomas?",
+    options: [{label:"no, sigo haciendo todo lo que quiero",value:0},{label:"a veces evito algunas cosas",value:1},{label:"frecuentemente evito cosas importantes",value:2},{label:"sí, mi vida se ha reducido bastante",value:3}] },
+
+  // ==================== ABIERTA (1) ====================
+  { id: "o1", section: "abierta", scale: "open", type: "open", text: "si quieres, anota aquí algo que sientas importante compartir con tu psicóloga (opcional, puede quedar en blanco).",
+    help: "podría ser un sueño recurrente, una situación específica, algo que no encajaba en las preguntas anteriores." }
+];
+
+// ============================================================
+// LÓGICA DEL CUESTIONARIO
+// ============================================================
+const STORAGE_KEY = "autoexploracion_v1";
+let state = {
+  currentIndex: 0,
+  answers: {},
+  started: false,
+  finished: false
+};
+
+function loadState() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      state = { ...state, ...parsed };
+    }
+  } catch (e) {}
+}
+
+function saveState() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  } catch (e) {}
+}
+
+function clearState() {
+  try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+  state = { currentIndex: 0, answers: {}, started: false, finished: false };
+}
+
+function setDate() {
+  const d = new Date();
+  const meses = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
+  document.getElementById("date-display").textContent = `${d.getDate()} de ${meses[d.getMonth()]} de ${d.getFullYear()}`;
+}
+
+// ============================================================
+// PANTALLAS
+// ============================================================
+function renderIntro() {
+  const app = document.getElementById("app");
+  const hasResume = Object.keys(state.answers).length > 0 && !state.finished;
+  app.innerHTML = `
+    <div class="card intro-screen">
+      <h2>antes de empezar</h2>
+      <p>este cuestionario tiene <strong>95 preguntas</strong> divididas en 9 secciones temáticas. te tomará entre 15 y 25 minutos. al final verás un resumen con puntuaciones por área e hipótesis para conversar con tu psicóloga o psiquiatra.</p>
+
+      <div class="info-box">
+        <strong>cómo funciona:</strong>
+        <ul style="margin-top:6px;">
+          <li>una pregunta por pantalla</li>
+          <li>tus respuestas se guardan automáticamente, puedes pausar y retomar</li>
+          <li>puedes saltar a cualquier sección desde el índice</li>
+          <li>al final puedes imprimir o guardar tu resumen</li>
+        </ul>
+      </div>
+
+      <div class="warning-box">
+        <strong>esto no es un diagnóstico.</strong> es un instrumento de cribado autoaplicado, basado en escalas validadas (phq-9, gad-7, mdq, asrs-v1.1) y criterios dsm-5. solo un profesional de la salud mental puede evaluar estos resultados en una entrevista clínica. lleva este informe a tu psicóloga.
+      </div>
+
+      <p style="font-size:0.88rem;color:var(--text-soft);">responde con honestidad, pensando en cómo te has sentido <strong>realmente</strong>, no en cómo te gustaría sentirte. no hay respuestas correctas ni incorrectas.</p>
+
+      <div class="nav-buttons" style="margin-top:24px;">
+        ${hasResume ? `<button class="btn-secondary" onclick="resetAndStart()">empezar de nuevo</button>
+        <button class="btn-primary" onclick="resumeQuestionnaire()">continuar donde quedé</button>`
+        : `<button class="btn-primary" onclick="startQuestionnaire()">comenzar</button>`}
+      </div>
+    </div>
+  `;
+}
+
+function startQuestionnaire() {
+  state.started = true;
+  state.currentIndex = 0;
+  saveState();
+  renderQuestion();
+}
+
+function resumeQuestionnaire() {
+  state.started = true;
+  let firstUnanswered = QUESTIONS.findIndex(q => state.answers[q.id] === undefined);
+  if (firstUnanswered === -1) firstUnanswered = QUESTIONS.length - 1;
+  state.currentIndex = firstUnanswered;
+  saveState();
+  renderQuestion();
+}
+
+function resetAndStart() {
+  if (confirm("¿seguro que quieres empezar de nuevo? se borrarán tus respuestas guardadas.")) {
+    clearState();
+    startQuestionnaire();
+  }
+}
+
+function renderQuestion() {
+  if (state.currentIndex >= QUESTIONS.length) {
+    return finishQuestionnaire();
+  }
+  const q = QUESTIONS[state.currentIndex];
+  const sec = SECTIONS[q.section];
+  const progress = ((state.currentIndex) / QUESTIONS.length) * 100;
+  const answered = Object.keys(state.answers).length;
+  const currentAnswer = state.answers[q.id];
+
+  const app = document.getElementById("app");
+  app.innerHTML = `
+    <div class="card">
+      <div class="progress-wrap">
+        <div class="progress-bar"><div class="progress-fill" style="width:${progress}%;"></div></div>
+        <div class="progress-text">
+          <span>pregunta ${state.currentIndex + 1} de ${QUESTIONS.length}</span>
+          <span>${answered} respondidas</span>
+        </div>
+      </div>
+
+      <details class="section-index">
+        <summary>📑 índice de secciones (saltar a otra)</summary>
+        <ul>${renderSectionIndex()}</ul>
+      </details>
+
+      <div class="section-tag">${sec.icon} ${sec.name}</div>
+      <div class="question-text">${q.text}</div>
+      ${q.help ? `<div class="question-help">${q.help}</div>` : ""}
+
+      ${q.type === "open"
+        ? `<textarea id="open-answer" placeholder="escribe aquí lo que quieras compartir... (opcional)">${currentAnswer || ""}</textarea>`
+        : `<div class="options">${q.options.map((opt, idx) => `
+            <label class="option ${currentAnswer === opt.value ? "selected" : ""}" onclick="selectOption('${q.id}', ${JSON.stringify(opt.value)})">
+              <span class="option-marker"></span>
+              <span>${opt.label}</span>
+            </label>
+          `).join("")}</div>`
+      }
+
+      <div class="nav-buttons">
+        <button class="btn-secondary" onclick="prevQuestion()" ${state.currentIndex === 0 ? "disabled" : ""}>← anterior</button>
+        <button class="btn-primary" onclick="nextQuestion()" id="next-btn">
+          ${state.currentIndex === QUESTIONS.length - 1 ? "ver resumen" : "siguiente →"}
+        </button>
+      </div>
+
+      <div style="text-align:center; margin-top:14px;">
+        <button class="btn-ghost" onclick="goToIntro()">⌂ volver al inicio</button>
+      </div>
+    </div>
+  `;
+
+  if (q.type === "open") {
+    const ta = document.getElementById("open-answer");
+    ta.addEventListener("input", () => {
+      state.answers[q.id] = ta.value;
+      saveState();
+    });
+  }
+}
+
+function renderSectionIndex() {
+  const orderedSections = Object.entries(SECTIONS).sort((a,b) => a[1].order - b[1].order);
+  return orderedSections.map(([key, sec]) => {
+    const sectionQuestions = QUESTIONS.filter(q => q.section === key);
+    const answered = sectionQuestions.filter(q => state.answers[q.id] !== undefined).length;
+    const total = sectionQuestions.length;
+    const firstQIndex = QUESTIONS.findIndex(q => q.section === key);
+    const isDone = answered === total;
+    return `<li><button class="${isDone ? 'done' : ''}" onclick="jumpToSection(${firstQIndex})">${sec.icon} ${sec.name} <span style="float:right;color:var(--text-soft);font-size:0.82rem;">(${answered}/${total})</span></button></li>`;
+  }).join("");
+}
+
+function jumpToSection(index) {
+  state.currentIndex = index;
+  saveState();
+  renderQuestion();
+}
+
+function selectOption(questionId, value) {
+  state.answers[questionId] = value;
+  saveState();
+  renderQuestion();
+}
+
+function nextQuestion() {
+  const q = QUESTIONS[state.currentIndex];
+  if (q.type === "open") {
+    const ta = document.getElementById("open-answer");
+    if (ta) state.answers[q.id] = ta.value;
+  }
+  if (q.type !== "open" && state.answers[q.id] === undefined) {
+    alert("por favor selecciona una opción antes de continuar.");
+    return;
+  }
+  state.currentIndex++;
+  saveState();
+  if (state.currentIndex >= QUESTIONS.length) {
+    finishQuestionnaire();
+  } else {
+    renderQuestion();
+    window.scrollTo(0, 0);
+  }
+}
+
+function prevQuestion() {
+  if (state.currentIndex > 0) {
+    state.currentIndex--;
+    saveState();
+    renderQuestion();
+    window.scrollTo(0, 0);
+  }
+}
+
+function goToIntro() {
+  state.started = false;
+  saveState();
+  renderIntro();
+}
+
+// ============================================================
+// CÁLCULO DE PUNTUACIONES
+// ============================================================
+function calculateScores() {
+  const a = state.answers;
+  const sum = (ids) => ids.reduce((acc, id) => acc + (typeof a[id] === "number" ? a[id] : 0), 0);
+
+  const phq9_items = ["d1","d2","d3","d4","d5","d6","d7","d8","d9"];
+  const phq9_score = sum(phq9_items);
+  let phq9_band, phq9_band_class;
+  if (phq9_score <= 4) { phq9_band = "mínima"; phq9_band_class = "band-min"; }
+  else if (phq9_score <= 9) { phq9_band = "leve"; phq9_band_class = "band-mild"; }
+  else if (phq9_score <= 14) { phq9_band = "moderada"; phq9_band_class = "band-mod"; }
+  else if (phq9_score <= 19) { phq9_band = "moderadamente severa"; phq9_band_class = "band-mod"; }
+  else { phq9_band = "severa"; phq9_band_class = "band-sev"; }
+
+  const dExtra_items = ["d10","d11","d12","d13","d14","d15","d16","d17","d18"];
+  const dExtra_score = sum(dExtra_items);
+
+  const suicide_flag = (a["d9"] || 0) >= 1;
+
+  const gad7_items = ["a1","a2","a3","a4","a5","a6","a7"];
+  const gad7_score = sum(gad7_items);
+  let gad7_band, gad7_band_class;
+  if (gad7_score <= 4) { gad7_band = "mínima"; gad7_band_class = "band-min"; }
+  else if (gad7_score <= 9) { gad7_band = "leve"; gad7_band_class = "band-mild"; }
+  else if (gad7_score <= 14) { gad7_band = "moderada"; gad7_band_class = "band-mod"; }
+  else { gad7_band = "severa"; gad7_band_class = "band-sev"; }
+
+  const aExtra_items = ["a8","a9","a10","a12","a13","a14","a15"];
+  const aExtra_score = sum(aExtra_items);
+
+  const panic_score = a["a11"] || 0;
+  const panic_positive = panic_score >= 2;
+
+  const mdq_items = ["m1","m2","m3","m4","m5","m6","m7","m8","m9","m10","m11","m12","m13"];
+  const mdq_score = sum(mdq_items);
+  const mdq_cluster = a["m14"] === 1;
+  const mdq_impact = a["m15"] || 0;
+  const mdq_positive = mdq_score >= 7 && mdq_cluster && mdq_impact >= 2;
+
+  const mExtra_grandiosidad = a["m16"] === 1;
+  const mExtra_proyectos = a["m17"] || 0;
+  const mExtra_labilidad = a["m18"] || 0;
+
+  const asrs_a_thresholds = {
+    t1: 2, t2: 2, t3: 2,
+    t4: 3, t5: 3, t6: 3
+  };
+  let asrs_a_positives = 0;
+  ["t1","t2","t3","t4","t5","t6"].forEach(id => {
+    if ((a[id] || 0) >= asrs_a_thresholds[id]) asrs_a_positives++;
+  });
+  const asrs_a_positive = asrs_a_positives >= 4;
+  const asrs_a_score = sum(["t1","t2","t3","t4","t5","t6"]);
+
+  const asrs_b_items = ["t7","t8","t9","t10","t11","t12","t13","t14","t15","t16","t17","t18"];
+  const asrs_b_score = sum(asrs_b_items);
+
+  const inattention_items = ["t1","t2","t3","t4","t7","t8","t9","t10","t11","t14"];
+  const hyperimp_items = ["t5","t6","t12","t13","t15","t16","t17","t18"];
+  const inattention_score = sum(inattention_items);
+  const hyperimp_score = sum(hyperimp_items);
+
+  const func_items = ["f1","f2","f3","f4","f5"];
+  const func_score = sum(func_items);
+  let func_band;
+  if (func_score <= 3) func_band = "leve";
+  else if (func_score <= 8) func_band = "moderada";
+  else func_band = "severa";
+
+  const pmdd_score = a["ct4"] || -1;
+  const pmdd_relevant = pmdd_score >= 2;
+
+  const family_history = {
+    depression: a["h1"] === 1,
+    bipolar: a["h2"] === 1,
+    adhd: a["h3"] === 1,
+    suicide: a["h4"] === 1,
+    anxiety: a["h5"] === 1
+  };
+
+  const onset_age = a["ct1"];
+  const pattern = a["ct2"];
+  const seasonal = a["ct3"];
+  const triggers = a["ct5"];
+  const lability = a["ct7"];
+
+  return {
+    phq9: { score: phq9_score, max: 27, band: phq9_band, bandClass: phq9_band_class },
+    dExtra: { score: dExtra_score, max: 27 },
+    suicide: { flag: suicide_flag, value: a["d9"] || 0 },
+    gad7: { score: gad7_score, max: 21, band: gad7_band, bandClass: gad7_band_class },
+    aExtra: { score: aExtra_score, max: 21 },
+    panic: { score: panic_score, positive: panic_positive },
+    mdq: { score: mdq_score, max: 13, cluster: mdq_cluster, impact: mdq_impact, positive: mdq_positive },
+    mExtra: { grandiosidad: mExtra_grandiosidad, proyectos: mExtra_proyectos, labilidad: mExtra_labilidad },
+    asrsA: { score: asrs_a_score, max: 24, positives: asrs_a_positives, positive: asrs_a_positive },
+    asrsB: { score: asrs_b_score, max: 48 },
+    adhd: { inattention: inattention_score, hyperimp: hyperimp_score },
+    func: { score: func_score, max: 15, band: func_band },
+    pmdd: { score: pmdd_score, relevant: pmdd_relevant },
+    family: family_history,
+    context: { onset: onset_age, pattern, seasonal, triggers, lability }
+  };
+}
+
+// ============================================================
+// GENERAR HIPÓTESIS / INTERPRETACIÓN
+// ============================================================
+function buildHypotheses(s) {
+  const hyp = [];
+
+  if (s.phq9.score >= 10) {
+    hyp.push({
+      title: "patrón depresivo clínicamente significativo",
+      text: `puntuación phq-9 = ${s.phq9.score}/27 (${s.phq9.band}). según el punto de corte validado, ≥10 sugiere derivación a evaluación clínica para descartar episodio depresivo mayor (criterios dsm-5). síntomas extra de depresión (anhedonia ampliada, vacío, desesperanza, culpa, variación diurna): ${s.dExtra.score}/27.`
+    });
+  } else if (s.phq9.score >= 5) {
+    hyp.push({
+      title: "síntomas depresivos leves",
+      text: `puntuación phq-9 = ${s.phq9.score}/27 (${s.phq9.band}). por debajo del umbral de derivación pero presentes. vale la pena conversarlo con tu psicóloga, sobre todo si te genera malestar.`
+    });
+  }
+
+  if (s.gad7.score >= 10) {
+    hyp.push({
+      title: "patrón de ansiedad clínicamente significativo",
+      text: `puntuación gad-7 = ${s.gad7.score}/21 (${s.gad7.band}). según el punto de corte validado, ≥10 sugiere posible trastorno de ansiedad generalizada (criterios dsm-5). síntomas somáticos y de evitación adicionales: ${s.aExtra.score}/21.`
+    });
+  } else if (s.gad7.score >= 5) {
+    hyp.push({
+      title: "síntomas de ansiedad leves",
+      text: `puntuación gad-7 = ${s.gad7.score}/21 (${s.gad7.band}). por debajo del umbral clínico pero presentes.`
+    });
+  }
+
+  if (s.panic.positive) {
+    hyp.push({
+      title: "posibles crisis de pánico",
+      text: `reportas crisis súbitas de miedo intenso con síntomas físicos. esto es compatible con trastorno de pánico (criterios dsm-5). describir frecuencia y desencadenantes a tu psicóloga es importante.`
+    });
+  }
+
+  if (s.mdq.positive) {
+    hyp.push({
+      title: "cribado positivo para episodios (hipo)maníacos (mdq)",
+      text: `cumples los tres criterios del mdq: ${s.mdq.score}/13 síntomas, agrupados en el tiempo, con impacto ${s.mdq.impact >= 3 ? "serio" : "moderado"}. esto sugiere posible presencia de episodios hipomaníacos o maníacos compatibles con espectro bipolar (dsm-5). importante: el mdq tiene falsos positivos, así que esto debe confirmarse en entrevista clínica con tu psiquiatra/psicóloga.`
+    });
+  } else if (s.mdq.score >= 7 && !s.mdq.cluster) {
+    hyp.push({
+      title: "síntomas dispersos compatibles con elevación del ánimo",
+      text: `marcaste ${s.mdq.score}/13 síntomas del mdq pero no formaron un episodio agrupado, o el impacto fue bajo. el cribado mdq no resulta positivo, pero los síntomas valen la pena explorar con tu psicóloga.`
+    });
+  } else if (s.mdq.score >= 7) {
+    hyp.push({
+      title: "síntomas hipomaníacos sin claro impacto funcional",
+      text: `${s.mdq.score}/13 síntomas reportados con agrupación temporal pero impacto bajo. cribado mdq no positivo según criterios estrictos, pero el patrón merece atención clínica.`
+    });
+  }
+
+  if (s.mExtra.grandiosidad || s.mExtra.proyectos >= 2 || s.mExtra.labilidad >= 2) {
+    hyp.push({
+      title: "rasgos de labilidad afectiva o energía elevada",
+      text: `reportas ${s.mExtra.grandiosidad ? "sensaciones de grandiosidad/invencibilidad, " : ""}${s.mExtra.proyectos >= 2 ? "patrón de iniciar muchos proyectos sin completarlos, " : ""}${s.mExtra.labilidad >= 2 ? "cambios bruscos de ánimo en horas." : ""}. estos rasgos son inespecíficos pero relevantes para evaluar diferencial entre tdah, ciclotimia o trastorno bipolar tipo ii.`
+    });
+  }
+
+  if (s.asrsA.positive) {
+    hyp.push({
+      title: "cribado positivo para tdah en adultos (asrs-v1.1)",
+      text: `${s.asrsA.positives}/6 ítems de la parte a del asrs en zona positiva (umbral oms: ≥4). resultado compatible con tdah en adultos (criterios dsm-5). subpuntuaciones: inatención ${s.adhd.inattention}/40, hiperactividad/impulsividad ${s.adhd.hyperimp}/32. ${s.adhd.inattention > s.adhd.hyperimp * 1.3 ? "predominio de síntomas inatentos." : s.adhd.hyperimp > s.adhd.inattention * 1.3 ? "predominio hiperactivo/impulsivo." : "patrón combinado."} importante: para diagnóstico se requiere historia desde la infancia y descartar otras causas.`
+    });
+  } else if (s.asrsA.positives >= 2) {
+    hyp.push({
+      title: "síntomas atencionales presentes pero por debajo del umbral asrs",
+      text: `${s.asrsA.positives}/6 ítems en zona positiva. no llega al umbral de cribado positivo (≥4) pero hay rasgos atencionales que valen la pena conversar, sobre todo si has notado dificultades persistentes desde la infancia o adolescencia.`
+    });
+  }
+
+  if (s.pmdd.relevant) {
+    hyp.push({
+      title: "empeoramiento premenstrual relevante",
+      text: `reportas empeoramiento ${s.pmdd.score === 3 ? "severo" : "moderado"} en días previos a la menstruación. esto es compatible con síndrome premenstrual o trastorno disfórico premenstrual (tdpm, dsm-5), que también puede coexistir con depresión, ansiedad o bipolaridad y modular sus síntomas.`
+    });
+  }
+
+  if (s.phq9.score >= 10 && s.gad7.score >= 10) {
+    hyp.push({
+      title: "patrón mixto ansioso-depresivo",
+      text: "puntuación clínicamente significativa simultánea en phq-9 y gad-7. la comorbilidad ansiedad-depresión es muy frecuente (alrededor del 60% en estudios) y suele requerir abordaje integrado."
+    });
+  }
+
+  if (s.mdq.positive && s.phq9.score >= 10) {
+    hyp.push({
+      title: "posible patrón bipolar (episodios depresivos + (hipo)maníacos)",
+      text: "presencia simultánea de cribado mdq positivo y phq-9 significativo. la combinación de episodios depresivos con episodios de elevación es el núcleo del trastorno bipolar (dsm-5). diferencial entre bipolar i, ii, ciclotimia y depresión con rasgos mixtos requiere evaluación clínica detallada."
+    });
+  }
+
+  if (s.asrsA.positive && s.phq9.score >= 10) {
+    hyp.push({
+      title: "tdah + síntomas depresivos",
+      text: "el tdah no tratado en adultos suele cursar con depresión secundaria (estudios indican 30-50% de comorbilidad). los síntomas atencionales pueden ser primarios o secundarios a la depresión, y esta diferencia es clave para el plan terapéutico."
+    });
+  }
+
+  if (s.asrsA.positive && s.gad7.score >= 10) {
+    hyp.push({
+      title: "tdah + ansiedad",
+      text: "comorbilidad muy frecuente. parte de la 'ansiedad' en personas con tdah puede ser ansiedad anticipatoria por dificultades atencionales. distinguir ansiedad primaria vs secundaria es importante."
+    });
+  }
+
+  if (s.asrsA.positive && s.mdq.positive) {
+    hyp.push({
+      title: "alerta diferencial tdah / bipolaridad",
+      text: "ambos cribados positivos. tdah y bipolaridad comparten síntomas (impulsividad, distraibilidad, energía, sueño alterado) y el diferencial es notoriamente difícil. una entrevista clínica detallada es esencial antes de cualquier tratamiento."
+    });
+  }
+
+  if (s.context.onset === 1 || s.context.onset === 2) {
+    hyp.push({
+      title: "inicio temprano de los síntomas",
+      text: "reportas que los síntomas comenzaron antes de los 18 años. esto es consistente con un patrón evolutivo (el tdah por definición debe tener síntomas antes de los 12, y muchos trastornos del ánimo emergen en la adolescencia). dato relevante para tu psicóloga."
+    });
+  }
+
+  if (s.context.seasonal === "oi") {
+    hyp.push({
+      title: "patrón estacional",
+      text: "empeoramiento en otoño-invierno. compatible con depresión con patrón estacional (dsm-5). vale la pena llevar el dato a tu psicóloga, sobre todo si se repite año a año."
+    });
+  }
+
+  if (s.context.lability === "hora") {
+    hyp.push({
+      title: "labilidad afectiva intra-día",
+      text: "cambios de ánimo dentro del mismo día. esto puede sugerir tdah con desregulación emocional, ciclación rápida bipolar, o rasgos de personalidad. el contexto importa mucho aquí."
+    });
+  }
+
+  const familyMatches = [];
+  if (s.family.depression) familyMatches.push("depresión");
+  if (s.family.bipolar) familyMatches.push("bipolaridad");
+  if (s.family.adhd) familyMatches.push("tdah");
+  if (s.family.anxiety) familyMatches.push("ansiedad");
+  if (familyMatches.length > 0) {
+    hyp.push({
+      title: "antecedentes familiares relevantes",
+      text: `historia familiar de ${familyMatches.join(", ")}. estos cuadros tienen carga heredable significativa (especialmente bipolaridad, ~60-80%, y tdah, ~70-80%). dato útil para tu evaluación clínica.`
+    });
+  }
+
+  if (s.func.score >= 9) {
+    hyp.push({
+      title: "repercusión funcional severa",
+      text: `puntuación funcional ${s.func.score}/15 (severa). los síntomas están afectando significativamente tu trabajo/estudios, relaciones y/o autocuidado. el malestar y el deterioro funcional son criterios clave del dsm-5 para distinguir un trastorno mental de variaciones normales del estado de ánimo.`
+    });
+  } else if (s.func.score >= 4) {
+    hyp.push({
+      title: "repercusión funcional moderada",
+      text: `puntuación funcional ${s.func.score}/15 (moderada). los síntomas están teniendo un impacto real en tu vida cotidiana.`
+    });
+  }
+
+  if (hyp.length === 0) {
+    hyp.push({
+      title: "puntuaciones por debajo de los umbrales clínicos",
+      text: "ningún dominio alcanzó los puntos de corte clínicamente significativos en este cribado. esto no descarta dificultades reales, sobre todo si te generan malestar. los autoinformes pueden subestimar síntomas en buenos días o por dificultad de insight. tu experiencia subjetiva es válida e importante."
+    });
+  }
+
+  return hyp;
+}
+
+// ============================================================
+// RENDER RESULTADOS
+// ============================================================
+function finishQuestionnaire() {
+  state.finished = true;
+  saveState();
+  renderResults();
+}
+
+function renderResults() {
+  const s = calculateScores();
+  const hyp = buildHypotheses(s);
+  const app = document.getElementById("app");
+
+  const fechaCompleta = new Date().toLocaleDateString("es-CL", { day:"numeric", month:"long", year:"numeric" });
+
+  const suicideAlert = s.suicide.flag ? `
+    <div class="danger-box">
+      <h3>⚠ información importante sobre seguridad</h3>
+      <p>marcaste que has tenido pensamientos de hacerte daño o de que estarías mejor muerta. esto merece atención inmediata, no por alarma, sino porque mereces apoyo.</p>
+      <p><strong>líneas de apoyo en chile:</strong></p>
+      <ul>
+        <li>línea libre de suicidio: <strong>*4141</strong> (gratuita 24/7 desde celular)</li>
+        <li>salud responde: <strong>600 360 7777</strong></li>
+        <li>fonosida / fonodrogas / saludable mente: <strong>600 360 7777</strong></li>
+      </ul>
+      <p style="margin-top:8px;">si estás en peligro inmediato, anda a urgencias o llama al <strong>131</strong> (samu). por favor cuéntale a tu psicóloga sobre estos pensamientos lo antes posible.</p>
+    </div>
+  ` : "";
+
+  app.innerHTML = `
+    <div class="card results-screen">
+      <h2>tu resumen de autoexploración</h2>
+      <p style="font-size:0.88rem;color:var(--text-soft);">fecha: ${fechaCompleta}</p>
+
+      <div class="warning-box">
+        <strong>⚠ esto no es un diagnóstico.</strong> solo un profesional de la salud mental puede evaluar estos resultados en una entrevista clínica. lleva este informe a tu psicóloga o psiquiatra.
+      </div>
+
+      ${suicideAlert}
+
+      <h3 style="margin-top:24px;color:var(--primary-dark);">puntuaciones por dominio</h3>
+
+      <div class="score-block">
+        <h3>💧 síntomas depresivos (phq-9)</h3>
+        <div class="score-value">${s.phq9.score}<span style="font-size:1rem;font-weight:400;color:var(--text-soft);"> / ${s.phq9.max}</span></div>
+        <div class="meter"><div class="meter-fill" style="width:${(s.phq9.score/s.phq9.max)*100}%;"></div></div>
+        <div class="score-band ${s.phq9.bandClass}">severidad: ${s.phq9.band}</div>
+        <div class="score-detail">síntomas extra dsm-5: ${s.dExtra.score}/27</div>
+      </div>
+
+      <div class="score-block">
+        <h3>🌊 ansiedad (gad-7)</h3>
+        <div class="score-value">${s.gad7.score}<span style="font-size:1rem;font-weight:400;color:var(--text-soft);"> / ${s.gad7.max}</span></div>
+        <div class="meter"><div class="meter-fill" style="width:${(s.gad7.score/s.gad7.max)*100}%;"></div></div>
+        <div class="score-band ${s.gad7.bandClass}">severidad: ${s.gad7.band}</div>
+        <div class="score-detail">síntomas somáticos / evitación: ${s.aExtra.score}/21${s.panic.positive ? " · crisis de pánico: presentes" : ""}</div>
+      </div>
+
+      <div class="score-block">
+        <h3>⚡ episodios (hipo)maníacos (mdq)</h3>
+        <div class="score-value">${s.mdq.score}<span style="font-size:1rem;font-weight:400;color:var(--text-soft);"> / ${s.mdq.max}</span></div>
+        <div class="meter"><div class="meter-fill" style="width:${(s.mdq.score/s.mdq.max)*100}%;"></div></div>
+        <div class="score-band ${s.mdq.positive ? 'band-pos' : 'band-neg'}">cribado: ${s.mdq.positive ? "POSITIVO" : "negativo"}</div>
+        <div class="score-detail">síntomas: ${s.mdq.score}/13 · agrupación temporal: ${s.mdq.cluster ? "sí" : "no"} · impacto: ${["ninguno","leve","moderado","serio"][s.mdq.impact] || "—"}</div>
+      </div>
+
+      <div class="score-block">
+        <h3>🌀 atención y organización (asrs-v1.1)</h3>
+        <div class="score-value">${s.asrsA.positives}<span style="font-size:1rem;font-weight:400;color:var(--text-soft);"> / 6 ítems en zona positiva</span></div>
+        <div class="meter"><div class="meter-fill" style="width:${(s.asrsA.positives/6)*100}%;"></div></div>
+        <div class="score-band ${s.asrsA.positive ? 'band-pos' : 'band-neg'}">cribado parte a: ${s.asrsA.positive ? "POSITIVO" : "negativo"}</div>
+        <div class="score-detail">inatención: ${s.adhd.inattention}/40 · hiperactividad/impulsividad: ${s.adhd.hyperimp}/32</div>
+      </div>
+
+      <div class="score-block">
+        <h3>🌳 repercusión funcional</h3>
+        <div class="score-value">${s.func.score}<span style="font-size:1rem;font-weight:400;color:var(--text-soft);"> / ${s.func.max}</span></div>
+        <div class="meter"><div class="meter-fill" style="width:${(s.func.score/s.func.max)*100}%;"></div></div>
+        <div class="score-band ${s.func.score >= 9 ? 'band-sev' : s.func.score >= 4 ? 'band-mod' : 'band-min'}">severidad: ${s.func.band}</div>
+      </div>
+
+      <h3 style="margin-top:24px;color:var(--primary-dark);">hipótesis para conversar con tu psicóloga</h3>
+
+      ${hyp.map(h => `
+        <div class="hypothesis">
+          <div class="hypothesis-title">▸ ${h.title}</div>
+          <div class="hypothesis-text">${h.text}</div>
+        </div>
+      `).join("")}
+
+      <h3 style="margin-top:24px;color:var(--primary-dark);">recomendaciones</h3>
+      <div class="hypothesis">
+        <div class="hypothesis-text">
+          • <strong>imprime o guarda este resumen</strong> y llévalo a tu próxima sesión con tu psicóloga.<br><br>
+          • <strong>no te autodiagnostiques</strong> con estos resultados. los cribados sirven para abrir conversaciones, no para cerrarlas. el dsm-5 exige entrevista clínica, descarte de causas médicas (tiroides, anemia, déficit de vitaminas), y consideración del contexto vital.<br><br>
+          • si los síntomas <strong>impactan significativamente tu vida</strong> y aún no estás en tratamiento, vale la pena considerar una evaluación con psiquiatra (sobre todo si hay sospecha de bipolaridad, tdah o ideación suicida).<br><br>
+          • <strong>guarda este resumen como una foto del momento.</strong> los síntomas fluctúan; lo que respondiste hoy puede no ser igual en 3 meses. eso es información útil, no un fracaso.
+        </div>
+      </div>
+
+      <div class="info-box">
+        <strong>escalas y criterios usados como referencia:</strong><br>
+        · phq-9 (kroenke, spitzer & williams, 2001) — depresión<br>
+        · gad-7 (spitzer et al., 2006) — ansiedad generalizada<br>
+        · mdq · mood disorder questionnaire (hirschfeld et al., 2000) — espectro bipolar<br>
+        · asrs-v1.1 (kessler et al., oms, 2005) — tdah adulto<br>
+        · dsm-5 (apa, 2013) — criterios diagnósticos generales
+      </div>
+
+      <div class="results-actions no-print">
+        <button class="btn-primary" onclick="window.print()">🖨 imprimir / guardar como pdf</button>
+        <button class="btn-secondary" onclick="goToIntro()">← volver al inicio</button>
+        <button class="btn-secondary" onclick="resetAll()">🔄 reiniciar y borrar respuestas</button>
+      </div>
+    </div>
+  `;
+  window.scrollTo(0, 0);
+}
+
+function resetAll() {
+  if (confirm("¿seguro que quieres borrar todas tus respuestas? esto no se puede deshacer.")) {
+    clearState();
+    renderIntro();
+  }
+}
+
+// ============================================================
+// INICIALIZACIÓN
+// ============================================================
+window.addEventListener("DOMContentLoaded", () => {
+  setDate();
+  loadState();
+  if (state.finished) {
+    renderResults();
+  } else if (state.started) {
+    renderQuestion();
+  } else {
+    renderIntro();
+  }
+});
+
+window.startQuestionnaire = startQuestionnaire;
+window.resumeQuestionnaire = resumeQuestionnaire;
+window.resetAndStart = resetAndStart;
+window.selectOption = selectOption;
+window.nextQuestion = nextQuestion;
+window.prevQuestion = prevQuestion;
+window.goToIntro = goToIntro;
+window.jumpToSection = jumpToSection;
+window.resetAll = resetAll;
+</script>
+</body>
+</html>
